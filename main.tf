@@ -56,8 +56,26 @@ resource "aws_iam_role_policy_attachment" "eks_service_policy" {
   policy_arn  = "arn:aws:iam::aws:policy/AmazonEKSServicePolicy"
 }
 
+# IAM Role for EKS Node Group
+#resource "aws_iam_role" "eks_node_role" {
+  #name = "AmazonEKSNodeRole"
+
+  #assume_role_policy = jsonencode({
+    #Version = "2012-10-17"
+    #Statement = [
+      #{
+        #Action    = "sts:AssumeRole"
+        #Effect    = "Allow"
+        #Principal = {
+          #Service = "ec2.amazonaws.com"
+        #}
+      #},
+    #]
+  #})
+#}
+
 # Use existing IAM Role for EKS Node Group
-data "aws_iam_role" "existing_node_role" {
+data "aws_iam_role" "eks_node_role" {
   name = "AmazonEKSNodeRole"
 }
 
