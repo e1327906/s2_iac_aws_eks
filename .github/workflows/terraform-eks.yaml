@@ -10,6 +10,10 @@ jobs:
     name: Terraform Plan and Apply
     runs-on: ubuntu-latest
 
+    env:
+      AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+      AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+      AWS_REGION: ap-southeast-1
     steps:
     - name: Checkout code
       uses: actions/checkout@v3
@@ -28,9 +32,5 @@ jobs:
     - name: Terraform Plan
       run: terraform plan -out=tfplan
 
-    - name: Terraform Apply
-      env:
-        AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-        AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-        AWS_REGION: ap-southeast-1
+    - name: Terraform Apply      
       run: terraform apply -auto-approve tfplan
