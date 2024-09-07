@@ -30,7 +30,7 @@ resource "aws_eks_cluster" "example" {
 
 # IAM Role for EKS Cluster
 resource "aws_iam_role" "eks_cluster" {
-  name = "EKSClusterRole"
+  name = "EKSClusterRole_NUS"
 
   assume_role_policy = jsonencode({
     Version = "2012-10-17"
@@ -56,36 +56,49 @@ resource "aws_iam_role_policy_attachment" "eks_service_policy" {
   policy_arn  = "arn:aws:iam::aws:policy/AmazonEKSServicePolicy"
 }
 
-# Use existing IAM Role for EKS Node Group
-data "aws_iam_role" "eks_node_role" {
-  name = var.eks_node_role
+# IAM Role for EKS Node Group
+resource "aws_iam_role" "eks_node_role" {
+  name = "AmazonEKSNodeRole_NUS"
+
+  assume_role_policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Action    = "sts:AssumeRole"
+        Effect    = "Allow"
+        Principal = {
+          Service = "ec2.amazonaws.com"
+        }
+      },
+    ]
+  })
 }
 
 resource "aws_iam_role_policy_attachment" "ec2_container_registry_read_only" {
-  role       = data.aws_iam_role.eks_node_role.name
+  role       = aws_iam_role.eks_node_role.name
   policy_arn  = "arn:aws:iam::aws:policy/AmazonEC2ContainerRegistryReadOnly"
 }
 
 resource "aws_iam_role_policy_attachment" "eks_cni_policy" {
-  role       = data.aws_iam_role.eks_node_role.name
+  role       = aws_iam_role.eks_node_role.name
   policy_arn  = "arn:aws:iam::aws:policy/AmazonEKS_CNI_Policy"
 }
 
 resource "aws_iam_role_policy_attachment" "eks_worker_node_policy" {
-  role       = data.aws_iam_role.eks_node_role.name
+  role       = aws_iam_role.eks_node_role.name
   policy_arn  = "arn:aws:iam::aws:policy/AmazonEKSWorkerNodePolicy"
 }
 
 resource "aws_iam_instance_profile" "eks_node_profile" {
   name = "eks-node-instance-profile"
-  role = data.aws_iam_role.eks_node_role.name
+  role = aws_iam_role.eks_node_role.name
 }
 
 # EKS Node Group
 resource "aws_eks_node_group" "example" {
   cluster_name    = aws_eks_cluster.example.name
   node_group_name = var.node_group_name
-  node_role_arn   = data.aws_iam_role.eks_node_role.arn
+  node_role_arn   = aws_iam_role.eks_node_role.arn
   subnet_ids       = data.aws_subnets.existing.ids
 
   scaling_config {
