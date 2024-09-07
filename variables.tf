@@ -23,7 +23,7 @@ variable "desired_size" {
 }
 
 variable "max_size" {
-  description = "The maximum number of nodes in the node group"
+  description = "The maximumnumber of nodes in the node group"
   type        = number
   default     = 1
 }
