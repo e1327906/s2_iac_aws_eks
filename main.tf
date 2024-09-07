@@ -76,7 +76,7 @@ resource "aws_iam_role_policy_attachment" "eks_service_policy" {
 
 # Use existing IAM Role for EKS Node Group
 data "aws_iam_role" "eks_node_role" {
-  name = "AmazonEKSNodeRole"
+  name = var.eks_node_role
 }
 
 resource "aws_iam_role_policy_attachment" "ec2_container_registry_read_only" {

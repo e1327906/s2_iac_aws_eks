@@ -33,3 +33,9 @@ variable "min_size" {
   type        = number
   default     = 1
 }
+
+variable "eks_node_role" {
+  description = "The name of the EKS node role"
+  type        = string
+  default     = "AmazonEKSNodeRole"
+}
