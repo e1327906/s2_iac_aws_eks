@@ -89,10 +89,10 @@ resource "aws_iam_role_policy_attachment" "eks_worker_node_policy" {
   policy_arn  = "arn:aws:iam::aws:policy/AmazonEKSWorkerNodePolicy"
 }
 
-resource "aws_iam_instance_profile" "eks_node_profile" {
-  name = "eks-node-instance-profile"
-  role = aws_iam_role.eks_node_role.name
-}
+#resource "aws_iam_instance_profile" "eks_node_profile" {
+  #name = "eks-node-instance-profile"
+  #role = aws_iam_role.eks_node_role.name
+#}
 
 # EKS Node Group
 resource "aws_eks_node_group" "example" {
