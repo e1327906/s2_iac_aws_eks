@@ -1,4 +1,4 @@
-name: Terraform EKS Cluster Deployment
+name: Terraform EKS Cluster Deployment 
 
 on:
   push:
